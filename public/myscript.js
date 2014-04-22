@@ -1,16 +1,16 @@
 var filters='';
 var socket = io.connect();
 socket.on('message', function(json) {
-    data = JSON.parse(json);
+    var data = JSON.parse(json);
     var replacePattern = /(\b(https?|ftp):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gim;
     var replacedText = (data.text).replace(replacePattern, '<a href="$1" target="_blank">$1</a>');
     filters.forEach(function(str) {
         var search = new RegExp(str, "gim");
         replacedText = replacedText.replace(search, '<span class="label label-danger">'+str+'</span>');
     });
-	$("<li></li>").html("[" + data.user.screen_name + "] " + replacedText)
-      	.prependTo("ul.unstyled")
-      	.css({opacity:0}).slideDown("slow").animate({opacity:1},"slow");
+	$("<p></p>").html(replacedText)
+      	.prependTo("ul.unstyled");
+        // .css({opacity:0}).slideDown("fast").animate({opacity:1},"fast");
 });
 socket.on("connect", function() {
     socket.emit('getfilter', function() {
